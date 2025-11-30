@@ -110,6 +110,7 @@ python app.py
 
 **Name:** Ujjwal Singh
 **Email:** [24f2007917@ds.study.iitm.ac.in](mailto:24f2007917@ds.study.iitm.ac.in)
-**Project Name:** `Parkro – Modern Parking System`
+**Project Name:** `parkingwale – Modern Parking System`
+
 
 ---
