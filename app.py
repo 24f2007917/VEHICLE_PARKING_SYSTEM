@@ -465,6 +465,5 @@ def user_chart_data():
     print("[DEBUG] /api/user/chart-data for user_id", user_id, ":", chart_data)
     return jsonify(chart_data)
 
-
-
-
+if __name__ == "__main__":
+    app.run(debug=True)

@@ -1,0 +1,464 @@
+openapi: 3.0.0
+info:
+  title: Park Karo API
+  description: API for Park Karo parking management system
+  version: 1.0.0
+
+paths:
+  /:
+    get:
+      summary: Home page
+      tags:
+        - Pages
+      responses:
+        '200':
+          description: Home page rendered
+
+  /our-story:
+    get:
+      summary: Our story page
+      tags:
+        - Pages
+      responses:
+        '200':
+          description: Our story page rendered
+
+  /team:
+    get:
+      summary: Team page
+      tags:
+        - Pages
+      responses:
+        '200':
+          description: Team page rendered
+
+  /locations:
+    get:
+      summary: Locations page
+      tags:
+        - Pages
+      responses:
+        '200':
+          description: Locations page rendered
+
+  /press:
+    get:
+      summary: Press page
+      tags:
+        - Pages
+      responses:
+        '200':
+          description: Press page rendered
+
+  /login:
+    get:
+      summary: Login page
+      tags:
+        - Authentication
+      responses:
+        '200':
+          description: Login page rendered
+    post:
+      summary: User login
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '302':
+          description: Redirect to dashboard on success
+        '200':
+          description: Login page with error message
+
+  /register:
+    get:
+      summary: Registration page
+      tags:
+        - Authentication
+      responses:
+        '200':
+          description: Registration page rendered
+    post:
+      summary: User registration
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '302':
+          description: Redirect to login on success
+
+  /logout:
+    get:
+      summary: User logout
+      tags:
+        - Authentication
+      responses:
+        '302':
+          description: Redirect to login page
+
+  /admin/dashboard:
+    get:
+      summary: Admin dashboard
+      tags:
+        - Admin
+      responses:
+        '200':
+          description: Admin dashboard with parking lots
+        '302':
+          description: Redirect if not admin
+    post:
+      summary: Create new parking lot
+      tags:
+        - Admin
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                address:
+                  type: string
+                pincode:
+                  type: string
+                price_per_hour:
+                  type: number
+                capacity:
+                  type: integer
+      responses:
+        '302':
+          description: Redirect to dashboard
+
+  /admin/lot/{lot_id}:
+    get:
+      summary: View parking lot details
+      tags:
+        - Admin
+      parameters:
+        - name: lot_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lot details with spots
+        '404':
+          description: Lot not found
+
+  /admin/lot/{lot_id}/add_spot:
+    post:
+      summary: Add new spot to lot
+      tags:
+        - Admin
+      parameters:
+        - name: lot_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '302':
+          description: Redirect to lot details
+
+  /admin/spot/delete/{spot_id}:
+    post:
+      summary: Delete parking spot
+      tags:
+        - Admin
+      parameters:
+        - name: spot_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '302':
+          description: Redirect to lot details
+
+  /admin/lot/edit/{lot_id}:
+    get:
+      summary: Edit lot form
+      tags:
+        - Admin
+      parameters:
+        - name: lot_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Edit lot form
+    post:
+      summary: Update parking lot
+      tags:
+        - Admin
+      parameters:
+        - name: lot_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                address:
+                  type: string
+                pincode:
+                  type: string
+                price_per_hour:
+                  type: number
+      responses:
+        '302':
+          description: Redirect to admin dashboard
+
+  /admin/lot/delete/{lot_id}:
+    post:
+      summary: Delete parking lot
+      tags:
+        - Admin
+      parameters:
+        - name: lot_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '302':
+          description: Redirect to admin dashboard
+
+  /admin/users:
+    get:
+      summary: View all non-admin users
+      tags:
+        - Admin
+      responses:
+        '200':
+          description: List of users
+
+  /admin/remove_user/{user_id}:
+    post:
+      summary: Remove user
+      tags:
+        - Admin
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '302':
+          description: Redirect to admin bookings
+
+  /admin/charts:
+    get:
+      summary: Admin charts page
+      tags:
+        - Admin
+      responses:
+        '200':
+          description: Admin charts page
+
+  /api/admin/chart-data:
+    get:
+      summary: Get admin chart data
+      tags:
+        - Admin API
+      responses:
+        '200':
+          description: Chart data for admin
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  overall_occupancy:
+                    type: object
+                    properties:
+                      labels:
+                        type: array
+                        items:
+                          type: string
+                      data:
+                        type: array
+                        items:
+                          type: integer
+                  lot_occupancy:
+                    type: object
+                    properties:
+                      labels:
+                        type: array
+                        items:
+                          type: string
+                      occupied_data:
+                        type: array
+                        items:
+                          type: integer
+                      available_data:
+                        type: array
+                        items:
+                          type: integer
+        '403':
+          description: Admin access required
+
+  /admin/bookings:
+    get:
+      summary: View all completed bookings
+      tags:
+        - Admin
+      responses:
+        '200':
+          description: List of completed bookings
+
+  /dashboard:
+    get:
+      summary: User dashboard
+      tags:
+        - User
+      responses:
+        '200':
+          description: User dashboard with lots and active bookings
+        '302':
+          description: Redirect if not logged in
+
+  /book/{lot_id}:
+    post:
+      summary: Book parking spot
+      tags:
+        - User
+      parameters:
+        - name: lot_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                vehicle_number:
+                  type: string
+      responses:
+        '302':
+          description: Redirect to dashboard
+
+  /release_spot/{booking_id}:
+    post:
+      summary: Release parking spot
+      tags:
+        - User
+      parameters:
+        - name: booking_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '302':
+          description: Redirect to dashboard
+
+  /history:
+    get:
+      summary: User booking history
+      tags:
+        - User
+      responses:
+        '200':
+          description: User's completed bookings
+        '302':
+          description: Redirect if not logged in
+
+  /user/charts:
+    get:
+      summary: User charts page
+      tags:
+        - User
+      responses:
+        '200':
+          description: User charts page
+
+  /api/user/chart-data:
+    get:
+      summary: Get user chart data
+      tags:
+        - User API
+      responses:
+        '200':
+          description: Chart data for user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cost_per_lot:
+                    type: object
+                    properties:
+                      labels:
+                        type: array
+                        items:
+                          type: string
+                      data:
+                        type: array
+                        items:
+                          type: number
+                  visits_per_lot:
+                    type: object
+                    properties:
+                      labels:
+                        type: array
+                        items:
+                          type: string
+                      data:
+                        type: array
+                        items:
+                          type: integer
+        '403':
+          description: User not logged in
+
+tags:
+  - name: Pages
+    description: Static pages
+  - name: Authentication
+    description: Login, registration, logout
+  - name: Admin
+    description: Admin functionality
+  - name: Admin API
+    description: Admin API endpoints
+  - name: User
+    description: User functionality
+  - name: User API
+    description: User API endpoints
