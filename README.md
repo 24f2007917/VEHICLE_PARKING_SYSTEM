@@ -1,5 +1,5 @@
 
-# 🚗 Parkkro – Modern Parking System
+# 🚗 parkingwale – Modern Parking System
 
 A smart, eco-friendly, and user-centric Flask-based vehicle parking management system. Features real-time availability, admin/user roles, a Green Card reward system, and more.
 
@@ -114,3 +114,4 @@ python app.py
 
 
 ---
+
